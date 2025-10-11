@@ -15,8 +15,8 @@ export class Server {
   }
 
 
-  postOrder(data: Partial<IOrder>): Promise<object> {
-    return this.api.post('/product/', data);
+  postOrder(id: Partial<IOrder>): Promise<IOrder> {
+    return this.api.post('/product/', id);
   }
 
 }

@@ -11,14 +11,11 @@ export class Basket {
   }
   //добавление товара, который был получен в параметре, в массив корзины
   addItem(product: IProduct): void {
-    this.items.push({ ...product });
+    this.items.push(product);
   }
   //удаление товара, полученного в параметре из массива корзины
   removeItem(productId: string): void {
-    const index = this.items.findIndex(item => item.id === productId);
-    if (index !== -1) {
-      this.items.splice(index, 1);
-    }
+    this.items = this.items.filter(item => item.id !== productId);
   }
   //очистка корзины
   clear(): void {

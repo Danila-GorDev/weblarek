@@ -1,9 +1,8 @@
-import { IBuyer } from '../../../types';
+import { IBuyer, TPayment, TBuyerErrors } from "../../../types";
 
 export class Buyer {
-
   //вид оплаты
-  protected payment: 'card' | 'cash' | undefined;
+  protected payment: TPayment;
   //адресс
   protected address: string | undefined;
   //телефон
@@ -11,9 +10,8 @@ export class Buyer {
   //email
   protected email: string | undefined;
 
-
   //сохранение данных в модели
- setBuyerData(data: IBuyer): void {
+  setBuyerData(data: IBuyer): void {
     if (data.payment) {
       this.payment = data.payment;
     }
@@ -34,52 +32,44 @@ export class Buyer {
       payment: this.payment,
       address: this.address,
       phone: this.phone,
-      email: this.email
+      email: this.email,
     };
   }
   //очистка данных покупателя
   clearData(): void {
     this.payment = undefined;
-    this.address = undefined;
-    this.phone = undefined;
-    this.email = undefined;
+    this.address = "";
+    this.phone = "";
+    this.email = "";
   }
   //валидация данных
-  validate(): {
-    isValid: boolean;
-    errors: {
-      payment?: string;
-      address?: string;
-      phone?: string;
-      email?: string;
-    }
-  } {
-    const errors: any = {};
-    let isValid = true;
+ validate(): {
+  isValid: boolean;
+  errors: TBuyerErrors;
+} {
+  const errors: TBuyerErrors = {};
 
-    if (this.payment === undefined) {
-      errors.payment = 'Метод оплаты не указан';
-      isValid = false;
-    }
-
-    if (!this.address) {
-      errors.address = 'Адрес не указан';
-      isValid = false;
-    }
-
-    if (!this.phone) {
-      errors.phone = 'Телефон не указан';
-      isValid = false;
-    }
-
-    if (!this.email) {
-      errors.email = 'Email не указан';
-      isValid = false;
-    }
-
-    return {
-      isValid,
-      errors
-    };
+  if (this.payment === undefined) {
+    errors.payment = 'Метод оплаты не указан';
   }
+
+  if (!this.address) {
+    errors.address = 'Адрес не указан';
+  }
+
+  if (!this.email) {
+    errors.email = 'Email не указан';
+  }
+
+  if (!this.phone) {
+    errors.phone = 'Телефон не указан';
+  }
+  
+  const isValid = Object.keys(errors).length === 0;
+
+  return {
+    isValid,
+    errors
+  };
+}
 }
