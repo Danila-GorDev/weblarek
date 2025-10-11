@@ -1,8 +1,8 @@
 import './scss/styles.scss';
-import {Products} from './components/base/models/Products';
-import {Buyer} from './components/base/models/Buyer';
-import { Basket } from './components/base/models/Basket';
-import { Server } from './components/base/models/Server';
+import {Products} from './components/models/Products';
+import {Buyer} from './components/models/Buyer';
+import { Basket } from './components/models/Basket';
+import { Server } from './components/models/Server';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/Api';
 

@@ -1,4 +1,4 @@
-import { IProduct, IApi, IOrder  } from "../../../types";
+import { IProduct, IApi, IOrder  } from "../../types";
 
 // export class Server extends Api {
 

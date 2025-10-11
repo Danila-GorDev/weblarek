@@ -1,4 +1,4 @@
-import { IBuyer, TPayment, TBuyerErrors } from "../../../types";
+import { IBuyer, TPayment, TBuyerErrors } from "../../types";
 
 export class Buyer {
   //вид оплаты
