@@ -5,11 +5,13 @@ import { Basket } from './components/models/Basket';
 import { Server } from './components/models/Server';
 import { API_URL } from './utils/constants';
 import { Api } from './components/base/Api';
+import { apiProducts } from './utils/data';
 
 //Каталог продуктов
 const products = new Products();
 const api = new Api(API_URL);
 const server = new Server(api)
+
 
 //Получение массива товаров с сервера
 server.getProduct()
@@ -31,12 +33,10 @@ server.getProduct()
 const buyerModel = new Buyer();
 
 //Сохранение данных
-buyerModel.setBuyerData({
-  payment: 'card',
-  address: 'г. Москва, ул. Ленина, д. 1',
-  phone: '',
-  email: 'user@example.com'
-});
+buyerModel.setBuyerData({payment: 'card'});
+buyerModel.setBuyerData({phone: '+7 (234) 999-99-99'});
+buyerModel.setBuyerData({email: '+7 (234) 999-99-99'});
+buyerModel.setBuyerData({address: '+7 (234) 999-99-99'});
 
 //Подучение данных 
 const buyerData = buyerModel.getBuyerData()
@@ -51,38 +51,15 @@ if (!validationResult.isValid) {
   console.error('Ошибка:', validationResult.errors);
 }
 //Очистка полей
-buyerModel.clearData()
+// buyerModel.clearData()
 
 
 // Карзина
 const basketClass = new Basket ();
-basketClass.addItem({
-    id: 'afwfwef3f-fsl3l3-f3m,23k',
-    category: 'String',
-    title: 'Марковка',
-    description: 'Очень полкзно',
-    image: 'img/mork.jpg',
-    price: 300
-});
-
-basketClass.addItem({
-    id: 'sdghdf-svefwgwe-4634g34',
-    category: 'Band',
-    title: 'Кросовки',
-    description: 'Всесезонные',
-    image: 'img/morфф.jpg',
-    price: 3800
-});
-
-basketClass.addItem({
-    id: 'dhdgr-42532523f-fsdvsrr',
-    category: 'Guuli',
-    title: 'Программа',
-    description: 'Фото Редактор',
-    image: 'img/priioi.jpg',
-    price: 1800
-});
-
+basketClass.addItem(apiProducts.items[3]);
+basketClass.addItem(apiProducts.items[0]);
+basketClass.addItem(apiProducts.items[1]);
+basketClass.addItem(apiProducts.items[2]);
 // Получаем все товары
 let allItems = basketClass.getItems();
 console.log('Все товары в корзине:', allItems);
@@ -96,10 +73,10 @@ let totalItems = basketClass.getTotalItems();
 console.log('Всего товаров:', totalItems);
 
 // Проверяем наличие товара
-console.log('Есть ли выбранный товар в корзине?', basketClass.hasItem('sdghdf-svefwgwe-4634g34'));
+console.log('Есть ли выбранный товар в корзине?', basketClass.hasItem('b06cde61-912f-4663-9751-09956c0eed67'));
 
 // Удаляем товар
-basketClass.removeItem('sdghdf-svefwgwe-4634g34');
+basketClass.removeItem('b06cde61-912f-4663-9751-09956c0eed67');
 console.log('Удалили выбраный товар из массива');
 
 allItems = basketClass.getItems();
@@ -108,4 +85,15 @@ console.log('Все товары в корзине:', allItems);
 total = basketClass.getTotalPrice();
 console.log('Общая стоимость:', total);
 // Очищаем корзину
-basketClass.clear();
+// basketClass.clear();
+
+const orderData = {
+    ...buyerModel.getBuyerData(),
+    total: basketClass.getTotalPrice(),
+    items: basketClass.getItems().map((item) => item.id),
+  };
+server.postOrder(orderData).then((order) => {
+  console.log(" Заказ отправлен на сервер:", order);
+}).catch((err) => {
+  console.error(" Ошибка при отправке заказа на сервер:", err);
+});

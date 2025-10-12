@@ -25,6 +25,11 @@ export interface IBuyer {
 }
 
 export interface IOrder extends IBuyer {
-    id: string[];
+    items: string[];
+    total: number;
+}
+
+export interface IOrderBack {
+    id: string;
     total: number;
 }

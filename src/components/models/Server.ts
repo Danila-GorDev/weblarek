@@ -1,4 +1,4 @@
-import { IProduct, IApi, IOrder  } from "../../types";
+import { IProduct, IApi, IOrder, IOrderBack  } from "../../types";
 
 // export class Server extends Api {
 
@@ -15,8 +15,8 @@ export class Server {
   }
 
 
-  postOrder(id: Partial<IOrder>): Promise<IOrder> {
-    return this.api.post('/product/', id);
+  postOrder(data: IOrder): Promise<IOrderBack> {
+    return this.api.post('/order/', data);
   }
 
 }

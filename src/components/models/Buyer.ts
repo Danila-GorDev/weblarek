@@ -11,7 +11,7 @@ export class Buyer {
   protected email: string | undefined;
 
   //сохранение данных в модели
-  setBuyerData(data: IBuyer): void {
+  setBuyerData(data: Partial<IBuyer>): void {
     if (data.payment) {
       this.payment = data.payment;
     }
