@@ -34,7 +34,7 @@ export abstract class Form<T extends IForm> extends Component<T> {
   }
 
   set error(value: string | undefined) {
-    this.errorContainer.textContent = value || "";
+    this.errorContainer.textContent = value || '';
   }
 
   set submit(value: boolean) {

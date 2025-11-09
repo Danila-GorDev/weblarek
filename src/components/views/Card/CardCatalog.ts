@@ -1,12 +1,12 @@
 import { categoryMap, CDN_URL } from "../../../utils/constants";
 import { ensureElement } from "../../../utils/utils";
-import { Card, CategoryKey } from "./Card";
+import { Card, CategoryKey, ICard } from "./Card";
 
 export interface ICardActions {
   onClick: (event: MouseEvent) => void;
 }
 
-interface ICardCatalog {
+interface ICardCatalog extends ICard {
   image: string;
   category: string;
 }
@@ -14,8 +14,9 @@ interface ICardCatalog {
 export class CardCatalog extends Card<ICardCatalog> {
   protected cardCategory: HTMLElement;
   protected cardImage: HTMLImageElement;
+  protected productId: string = "";
 
-  constructor(container: HTMLElement, actions?: ICardActions) {
+  constructor(container: HTMLElement, action?: ICardActions) {
     super(container);
 
     this.cardCategory = ensureElement<HTMLElement>(
@@ -27,9 +28,11 @@ export class CardCatalog extends Card<ICardCatalog> {
       this.container
     );
 
-    if (actions?.onClick) {
-      this.container.addEventListener("click", actions.onClick);
+    if (action?.onClick) {
+      this.container.addEventListener("click", action.onClick);
     }
+
+    
   }
 
   set category(value: string) {
@@ -46,5 +49,9 @@ export class CardCatalog extends Card<ICardCatalog> {
   set image(value: string) {
     this.cardImage.src = `${CDN_URL}/${value}`;
     this.cardImage.alt = this.title;
+  }
+
+    set id(value: string) {
+    this.productId = value;
   }
 }

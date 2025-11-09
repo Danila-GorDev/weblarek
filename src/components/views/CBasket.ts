@@ -5,7 +5,7 @@ import { IEvents } from "../base/Events";
 interface IBasket {
   list: HTMLElement[];
   total: number;
-  order: boolean;
+  btnStatus: boolean;
 }
 
 export class CBasket extends Component<IBasket> {
@@ -20,6 +20,8 @@ export class CBasket extends Component<IBasket> {
     this.btnOrder = ensureElement<HTMLButtonElement>('.basket__button', this.container);
     this.listContainer = ensureElement<HTMLElement>('.basket__list', this.container);
 
+    this.btnOrder.disabled = true;
+
     this.btnOrder.addEventListener('click', () => {
       this.events.emit('form:order');
     });
@@ -33,7 +35,7 @@ export class CBasket extends Component<IBasket> {
     this.totalElem.textContent = `${value} синапсов`;
   }
 
-  set order(value:boolean) {
-    this.btnOrder.disabled = !value
+  set btnStatus(value:boolean) {
+    this.btnOrder.disabled = value
   }
 }

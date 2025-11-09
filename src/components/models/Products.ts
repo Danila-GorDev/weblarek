@@ -32,7 +32,7 @@ export class Products {
   setSelectedProduct(id: string): void {
     const product = this.products.find(product => product.id === id)
     this.product = product;
-    this.event.emit('product:chenged');
+    this.event.emit('setProduct:chenged');
   }
 
   //  получение товара для подробного отображения

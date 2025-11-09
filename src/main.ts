@@ -74,13 +74,12 @@ events.on("order:submit", () => {
 // Событие кнопки "За новыми покупками" после отправки заказа (Success.ts)
 events.on("button:close", () => {
   modal.closeModal();
-  
 });
 
 // Событие кнопки "Оплатить" в корзине (Form.ts)
 events.on("contacts:submit", () => {
 
-    success.total = backet.getTotalPrice()
+    
 
 const orderData = {
     ...buyerModel.getBuyerData(),
@@ -92,18 +91,21 @@ server.postOrder(orderData)
 .then((order) => {
   backet.clear();
   buyerModel.clearData();
+  success.total = order.total
+  modal.render({ content: success.render() });
   console.log(" Заказ отправлен на сервер:", order);
 }).catch((err) => {
-  console.error(" Ошибка при отправке заказа на сервер:", err);
-});
+  alert(err);
+}); 
 
 
-  modal.render({ content: success.render() });
+  
 });
 
 // Событие заполнения полей заказа (Form.ts)
 events.on("form:change", (event: { field: keyof IBuyer; value: string }) => {
   buyerModel.setBuyerData({ [event.field]: event.value });
+  console.log(buyerModel.getBuyerData())
 });
 
 // Событие изменений в данных покупателя (Buyer.ts)
@@ -113,29 +115,13 @@ events.on("data:change", () => {
 
   order.payment = buyerData.payment;
 
-  const errorOrder = validate.errors.payment
-    ? validate.errors.payment
-    : validate.errors.address
-    ? validate.errors.address
-    : "";
 
-  order.error = errorOrder;
+  order.error = validate.errors.address || validate.errors.payment || "";
+  order.submit = !!(buyerData.payment && buyerData.address);
 
-  if (buyerData.payment && buyerData.address !== "") {
-    order.submit = true;
-  }
 
-  const errorContact = validate.errors.email
-    ? validate.errors.email
-    : validate.errors.phone
-    ? validate.errors.phone
-    : "";
-
-  contact.error = errorContact;
-
-  if (buyerModel.validate().isValid) {
-    contact.submit = true;
-  }
+  contact.error = validate.errors.email || validate.errors.phone || "";;
+  contact.submit = validate.isValid;
 
 });
 
@@ -153,10 +139,14 @@ events.on("product:chenged", () => {
   gallery.render({ list: items });
 });
 
-// Событие открывает карточку выбранного товара в галлерее (product:chenged)
+// Событие сохраняет выбранный продукт (product:chenged)
 events.on("card:select", (item: IProduct) => {
-  const product = products.getItem(item.id);
   products.setSelectedProduct(item.id);
+});
+
+// Событие открывает карточку выбранного товара в галлерее (Products.ts)
+events.on("setProduct:chenged", () => {
+  const product = products.getSelectedProduct();
 
   if (!product) {
     return;
@@ -166,39 +156,37 @@ events.on("card:select", (item: IProduct) => {
   if (!product.price) {
     textButton = "Недоступно";
   } else {
-    textButton = backet.hasItem(item.id) ? "Удалить из корзины" : "Купить";
+    textButton = backet.hasItem(product.id) ? "Удалить из корзины" : "Купить";
   }
   cardPrev.buttonText = textButton;
 
   modal.render({ content: cardPrev.render(product) });
   modal.openModal();
-});
+})
 
 // Событие кнопки в карточке превью товара (CardPrieview.ts)
 events.on("preview:button", () => {
-  const tovar = products.getSelectedProduct();
-  if (tovar) {
-    if (backet.hasItem(tovar.id)) {
-      backet.removeItem(tovar.id);
+  const product = products.getSelectedProduct();
+  if (product) {
+    if (backet.hasItem(product.id)) {
+      backet.removeItem(product.id);
     } else {
-      backet.addItem(tovar);
+      backet.addItem(product);
     }
   }
-  cardBasket.total = backet.getTotalPrice();
   modal.closeModal();
 });
 
 // Событие удаления товара из корзины (CardBasket.ts)
 events.on("product:delete", ({ id }: { id: string }) => {
   backet.removeItem(id);
-  cardBasket.total = backet.getTotalPrice();
   modal.render({ content: cardBasket.render() });
 });
 
 // Событие открытия корзины на главной странице (Header.ts)
 events.on("basket:open", () => {
-  modal.openModal();
   modal.render({ content: cardBasket.render() });
+  modal.openModal();
 });
 
 // Событие изменений в корзине (Basket.ts)
@@ -215,11 +203,12 @@ events.on("basket:chenged", () => {
   });
 
   if (product.length === 0) {
-    cardBasket.order = false;
+    cardBasket.btnStatus = true;
   } else {
-    cardBasket.order = true;
+    cardBasket.btnStatus = false;
   }
 
+  cardBasket.total = backet.getTotalPrice();
   header.counter = backet.getTotalItems();
   cardBasket.render({ list: product });
 });

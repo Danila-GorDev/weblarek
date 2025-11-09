@@ -5,8 +5,9 @@ import { Component } from "../../base/Component";
 
 export type CategoryKey = keyof typeof categoryMap;
 
-interface ICard extends Partial<IProduct> {
+export interface ICard extends Partial<IProduct> {
   index?: number;
+  id: string;
 }
 
 export abstract class Card<T extends ICard> extends Component<T> {
