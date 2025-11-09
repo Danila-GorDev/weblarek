@@ -10,6 +10,20 @@
     padding: 0;
     margin: 0;
     flex-grow: 1;
+
+    // Если список пустой добавил стили
+
+    &:empty {
+      display: flex;
+      align-items: left;
+      justify-content: flex-start;
+
+      &::after {
+        content: "Корзина пуста";
+        color: rgb(100, 97, 99);
+        font-style: inherit;
+      }
+    }
   }
 
   &__item {
@@ -30,7 +44,7 @@
     }
 
     &-delete {
-      @include mixins.icon(2rem, 'trash');
+      @include mixins.icon(2rem, "trash");
       @include mixins.link($hover, white);
       opacity: 0.5;
       margin-left: 4rem;

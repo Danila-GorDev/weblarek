@@ -1,25 +1,34 @@
 import { IProduct } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Basket {
 
   //хранит массив товаров, выбранных покупателем для покупки
-  protected items: IProduct[] = []
+  protected items: IProduct[] = [];
+  protected event: IEvents;
+
+  constructor(event: IEvents){
+    this.event = event;
+  }
 
   //получение массива товаров, которые находятся в корзине
   getItems(): IProduct[] {
     return this.items;
   }
   //добавление товара, который был получен в параметре, в массив корзины
-  addItem(product: IProduct): void {
+  addItem(product: IProduct) {
     this.items.push(product);
+    this.event.emit('basket:chenged');
   }
   //удаление товара, полученного в параметре из массива корзины
   removeItem(productId: string): void {
     this.items = this.items.filter(item => item.id !== productId);
+    this.event.emit('basket:chenged');
   }
   //очистка корзины
   clear(): void {
     this.items = [];
+    this.event.emit('basket:chenged');
   }
   //получение стоимости всех товаров в корзине
   getTotalPrice(): number {

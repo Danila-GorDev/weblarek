@@ -201,3 +201,222 @@ Presenter - презентер содержит основную логику п
 Методы класса:
 `getProduct(): Promise<IProduct[]>` - делает запрос и возвращает массив товаров.
 `postOrder(data: IOrder): Promise<IOrderBack>` - делает запрос и передаёт в него данные.
+
+##### Слой Представления (View)
+
+#### Родительский класс Card
+Ролмтельский класс для классов: CardBasket, CardCatalog, CardPreview. Содержит общий для всех дочерних классов функционал. 
+
+Типы:
+`CategoryKey = keyof typeof categoryMap` - тип для сортировки категорий товаров.
+
+Поля класса:
+`index?: number;` - добавляет индекс
+
+Поля конструктора:
+`cardTitle: HTMLElement` - название товара. принимает DOM елемент
+`cardPrise: HTMLElement` - цена товара. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement)` - принимает ссылку на DOM элемент за отображение, которого он отвечает.
+
+Методы класса:
+`set title(text: string)` - принимает название товара для вставки в разметку
+`set price(value: number | null)` - принимает цену товара для вставки в разметку
+
+## Дочерний класс CardBasket
+Отвечает за список товаров в корзине
+
+Поля класса:
+`index: number` - номер товара в корзине
+`id: string` идентификатор товара в корзине
+
+Поля конструктора:
+`indexElement: HTMLElement` - номер товара. принимает DOM елемент
+`deleteProduct: HTMLButtonElement` - кнопка удаления товара. принимает DOM елемент
+`productId: string = ''` - идентификатор товара. принимает строку
+
+События:
+`product:delete` - удаление товара из корзины
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+Методы класса:
+`set index(value:number)` - принимает номер товара в корзине
+`set id(value: string)` принимает идентификатор товара в корзине
+
+
+## Дочерний класс CardCatalog
+Отвечает за карточки товаров в галерее.
+
+Поля класса:
+`image: string` - параметры картинки
+`category: string` - категория товара
+
+Поля конструктора:
+`cardCategory: HTMLElement` - категория товара. принимает DOM елемент
+`cardImage: HTMLImageElement` - картинка. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+Методы класса:
+`set category(value: string)` - принимает категорию товара для отображения
+`set image(value: string)` - принимает параметры картинки для отображения
+
+## Дочерний класс CardPreview
+отвечает за формирование превью карточек товаров.
+
+Поля конструктора:
+`cardCategory: HTMLElement` - категория товара. принимает DOM елемент
+`cardImage: HTMLImageElement` - картинка. принимает DOM елемент
+`descriptionElement: HTMLElement` - описание товара. принимает DOM елемент
+`btnAdd: HTMLButtonElement` - кнопка добавления/удаления товара в корзину. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+Событие:
+`preview:button` - отвечает за кнопку в карточке выбрвнного товара
+
+Методы класса:
+`set category(value: string)` - принимает категорию товара для отображения
+`set image(value: string)` - принимает параметры картинки для отображения
+`set description(value: string)` - принимает описание товара для отображения
+`set buttonText(value: string)` - принимает текст кнопки для отображения
+
+#### Родительский класс Form
+Ролмтельский класс для классов: Contact и Order. Содержит общий для всех дочерних классов функционал.
+
+Поля класса:
+`error: string | undefined` - ошибки при валидации
+
+Поля конструктора:
+`submitButton: HTMLButtonElement` - кнопка в форме. принимает DOM елемент
+`errorContainer: HTMLElement` - контейнек для отображения ошибки. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+События:
+`${this.container.getAttribute("name")}:submit` - отвечает за переход между формами в корзине и кнопку отправки заказа.
+`form:change` - реагирует на выбор метода оплаты и заполнение полей форм.
+
+
+Методы класса:
+`set error(value: string | undefined)` - принимает текст ошибки для вывода на экран
+`set submit(value: boolean)` - принимает true/false для активации и деактивации кнпки
+
+## Дочерний класс Order
+Предназначен для отображения формы выбора способа оплаты и заполнния адресса покупателя
+
+Поля конструктора:
+`btnOrder: HTMLButtonElement[]` - массив кнопок оплаты. принимает DOM елемент
+`addresInput: HTMLInputElement` - инпут ввода адреса покупателя. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+Методы класса:
+`set payment(payment: string | undefined)` - принимает name кнопки для пеедачи активного состояния
+
+
+## Дочерний класс Contact
+Предназначен для отображения формы с инпутами Email и Телефон
+
+Поля конструктора:
+`emailInput: HTMLInputElement` - инпут ввода email покупателя. принимает DOM елемент
+`phoneInput: HTMLInputElement` - инпут ввода телефона покупателя. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+#### Класс CBasket
+Предназначен для вывода на экран галлереи товаров.
+
+Поля класса:
+`list: HTMLElement[]` - массив карточек товаров в корзине. принимает DOM елемент
+`total: number` - общая цена товаров в корзине. принимает DOM елемент
+`order: boolean` - кнопка оформления заказа. принимает DOM елемент
+
+Поля конструктора:
+`totalElem: HTMLElement` - общая цена товаров в корзите. принимает DOM елемент
+`btnOrder: HTMLButtonElement` - кнопка с корзине. принимает DOM елемент
+`listContainer: HTMLElement` - контейнер корзины. принимает DOM елемент
+
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+События:
+`form:order` - рендерит следующую форму
+
+Методы класса:
+`set list(items: HTMLElement[])` - принимает массив DOM елементов для вывода в корзине
+`set total(value: number)` - принимает и выводит общую цену товаров в корзине
+`set order(value:boolean)` - принимает true/false для блокировки/разблокировки кнопки
+
+#### Класс Gallery
+Предназначен для вывода на экран галлереи товаров.
+
+Поля класса:
+`list: HTMLElement[]` - массив карточек товаров. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement)` - принимает ссылку на DOM элемент.
+
+Методы класса:
+`set list(items: HTMLElement[])` - принимает массив карточек товаров для вывода на экран
+
+#### Класс Header
+Предназначен для инициализации карзины и счетчика товаров в корзине.
+
+Поля класса:
+`counter: number` - счетчик товаров в карзине
+
+Поля конструктора:
+`buttonBacket: HTMLButtonElement` - кнопка карзины. принимает DOM елемент
+`countElement: HTMLElement` - счетчик товаров. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+События:
+`basket:open` - открывает модальное окно корзины
+
+Методы класса:
+`set counter(value: number)` - принимает количество товаров в корзине для отображения
+
+
+#### Класс Modal
+Предназначен для формирования модального окна.
+
+Поля класса:
+`content: HTMLElement` - содержимое контейнера модального окна
+
+Поля конструктора:
+`btnClose: HTMLButtonElement` - кнопка закрытия модального окна. принимает DOM елемент
+`modalContent: HTMLElement` - контейнер модального окна. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+Методы класса:
+`set content(items: HTMLElement)` - принимает и выводит содержимое контейнера модального окна
+`openModal(): void ` - открытие модального окна
+`closeModal(): void ` - закрытие модального окна
+
+#### Класс Success
+Предназначен для формирования сообщения успешного заказа.
+
+Поля конструктора:
+`closeButton: HTMLButtonElement` - кнопка закрытия окна сообщения. принимает DOM елемент
+`totalPrise: HTMLElement` - цена заказа. принимает DOM елемент
+
+Конструктор:
+`constructor(container:HTMLElement, protected events: IEvents)` - принимает ссылку на DOM элемент и слушатель событий.
+
+События:
+`button:close` - закрывает окно отправленного заказа
+
+Методы класса:
+`set total(value: number)` - принимает и выводит итоговую цену заказа

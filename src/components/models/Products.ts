@@ -1,4 +1,5 @@
 import { IProduct } from '../../types';
+import { IEvents } from '../base/Events';
 
 export class Products {
 
@@ -6,10 +7,16 @@ export class Products {
   protected products: IProduct[] = [];
   // хранит товар, выбранный для подробного отображения
   protected product: IProduct | undefined;
+  protected event: IEvents
+
+  constructor(event:IEvents){
+    this.event = event
+  }
 
   // сохранение массива товаров полученного в параметрах метода;
   setItems(products: IProduct[]): void {
     this.products = products
+    this.event.emit('product:chenged');
   }
   // получение массива товаров из модели
   getItems(): IProduct[] {
@@ -25,6 +32,7 @@ export class Products {
   setSelectedProduct(id: string): void {
     const product = this.products.find(product => product.id === id)
     this.product = product;
+    this.event.emit('product:chenged');
   }
 
   //  получение товара для подробного отображения
