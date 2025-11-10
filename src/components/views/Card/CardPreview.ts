@@ -59,6 +59,8 @@ export class CardPreview extends Card<IProduct> {
     this.btnAdd.textContent = String(value);
     if (value === "Недоступно") {
       this.btnAdd.disabled = true;
+    } else {
+      this.btnAdd.disabled = false;
     }
   }
 }
